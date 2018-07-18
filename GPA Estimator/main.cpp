@@ -169,7 +169,7 @@ void completeUserSelection(int userChoice)
     
 }
 
-void executeUntilUserFinishes()
+void executeUntilUserFinishes() 
 {
     //Loops until the user enteres a zero
     //inputs: none
