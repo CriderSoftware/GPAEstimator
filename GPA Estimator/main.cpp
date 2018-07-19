@@ -106,6 +106,17 @@ void getNumberOfCredits()
     numberPastCredits = GetInputFloat();
 }
 
+void displayOneClass(int whichClass)
+{
+    cout << whichClass + 1 << "\t" << classNames[whichClass] << "\t\t" << classCredits[whichClass] << "\t" << classWeight[whichClass]<<"\t" << gradesEarned[whichClass] << "\n";
+}
+void displayClassInfoHeader()
+{
+    //Display the headers for the list of classes entered
+    cout<< "ClassID\tClass Name\tCredits\tWeight\tGrade\n";
+    cout<< "*******\t**********\t*******\t******\t*****\n";
+}
+
 void displayClassInfo()
 {
     for (int i = 0; i< numberOfClasses;i++)
@@ -113,10 +124,9 @@ void displayClassInfo()
         if (i==0)
         {
             cout<< "Here is all of the class info\n";
-            cout<< "Class Name\tCredits\tWeight\tGrade\n";
-            cout<< "**********\t*******\t******\t*****\n";
+            displayClassInfoHeader();
         }
-        cout << classNames[i] << "\t\t" << classCredits[i] << "\t" << classWeight[i]<<"\t" << gradesEarned[i] << "\n";
+        displayOneClass(i);
     }
 }
 
@@ -255,6 +265,53 @@ void addAClass()
     getGradeEarned(numberOfClasses);
     storeGradePoint(numberOfClasses);
     numberOfClasses++;
+    
+    cout << "Class has been added\n";
+    displayClassInfoHeader();
+    displayOneClass(numberOfClasses-1);
+}
+
+void RemoveClassFromInternalstructure(int whichClass)
+{
+    //Remove the indexed item from all the arrays in
+    //the class and change the number of classes in the system.
+    //input: whichClass - integer representing the index of the class to be removed.
+    //outputs: nothing
+    
+    for (int i = whichClass; i< numberOfClasses; i++)
+    {
+        classNames[i] = classNames[i+1];
+        classCredits[i] = classCredits[i+1];
+        gradesEarned[i] = gradesEarned[i+1];
+        classWeight[i] = classWeight[i+1];
+        gradePointValues[i] = gradePointValues[i+1];
+    }
+    numberOfClasses--;
+}
+
+void removeAClass()
+{
+    bool userHasSelectedClass = false;
+    int classIDToRemove =-10;
+    int classIndexToRemove= -10;
+    while(!userHasSelectedClass)
+    {
+    cout << "Here is the list of classes. Please enter the ClassID of the class to be removed.\n";
+    displayClassInfo();
+     classIDToRemove = GetInputInt();
+     classIndexToRemove = classIDToRemove -1;
+        cout << "you have selected this class:\n";
+        displayOneClass(classIndexToRemove);
+        cout << "Please enter a Y to confirm\n";
+        string userConfirm = GetInputString();
+        char letterEntered = userConfirm[0];
+        if (toupper(letterEntered) == 'Y')
+        {
+            userHasSelectedClass = true;
+        }
+    }
+    RemoveClassFromInternalstructure(classIndexToRemove);
+    cout << "Class has been removed\n";
 }
 
 void completeClassMaintenance(int userChoice)
@@ -282,7 +339,7 @@ void completeClassMaintenance(int userChoice)
             break;
             
         case 2:
-            //removeAClass();
+            removeAClass();
             break;
             
         case 9:
@@ -379,4 +436,228 @@ int main() {
 }
 
 
-
+/*
+ Test Input
+ 
+ 3
+ 1
+ Algebra
+ AP
+ 1
+ B+
+ 1
+ Physics
+ Normal
+ 1
+ A-
+ 1
+ Gym
+ DualCredit
+ 1
+ C+
+ 9
+ 2
+ 2
+ Y
+ 9
+ 0
+ 9
+ 0
+ 
+ Expected Output
+ Hello, World!
+ 
+ 
+ **********
+ ** Menu **
+ **********
+ 1 - Set the number of credits taken
+ 2 - Set current GPA
+ 3 - Current Class Maintenance
+ 9 - Show all entries
+ 0 - Exit Application
+ 
+ 
+ ****************
+ ** Class Menu **
+ ****************
+ 1 - Add a class
+ 2 - Remove a class
+ 9 - Show all classes
+ 0 - Exit Class Maintenance
+ 
+ You will be prompted for the name, class weight, credits, and estimated grade for class
+ 
+ 
+ 
+ Step 1 of 4
+ Enter the name of the class.
+ 
+ 
+ Step 2 of 4
+ Enter the weight type of the class (Normal, AP, EarlyCollege, DualCredit.
+ 
+ 
+ Step 3 of 4
+ Enter the number of credits this class is worth.
+ 
+ 
+ Step 4 of 4
+ Enter the letter grade for this class
+ Class has been added
+ ClassID    Class Name    Credits    Weight    Grade
+ *******    **********    *******    ******    *****
+ 1    Algebra        1    AP    B+
+ 
+ 
+ ****************
+ ** Class Menu **
+ ****************
+ 1 - Add a class
+ 2 - Remove a class
+ 9 - Show all classes
+ 0 - Exit Class Maintenance
+ 
+ You will be prompted for the name, class weight, credits, and estimated grade for class
+ 
+ 
+ 
+ Step 1 of 4
+ Enter the name of the class.
+ 
+ 
+ Step 2 of 4
+ Enter the weight type of the class (Normal, AP, EarlyCollege, DualCredit.
+ 
+ 
+ Step 3 of 4
+ Enter the number of credits this class is worth.
+ 
+ 
+ Step 4 of 4
+ Enter the letter grade for this class
+ Class has been added
+ ClassID    Class Name    Credits    Weight    Grade
+ *******    **********    *******    ******    *****
+ 2    Physics        1    Normal    A-
+ 
+ 
+ ****************
+ ** Class Menu **
+ ****************
+ 1 - Add a class
+ 2 - Remove a class
+ 9 - Show all classes
+ 0 - Exit Class Maintenance
+ 
+ You will be prompted for the name, class weight, credits, and estimated grade for class
+ 
+ 
+ 
+ Step 1 of 4
+ Enter the name of the class.
+ 
+ 
+ Step 2 of 4
+ Enter the weight type of the class (Normal, AP, EarlyCollege, DualCredit.
+ 
+ 
+ Step 3 of 4
+ Enter the number of credits this class is worth.
+ 
+ 
+ Step 4 of 4
+ Enter the letter grade for this class
+ Class has been added
+ ClassID    Class Name    Credits    Weight    Grade
+ *******    **********    *******    ******    *****
+ 3    Gym        1    DualCredit    C+
+ 
+ 
+ ****************
+ ** Class Menu **
+ ****************
+ 1 - Add a class
+ 2 - Remove a class
+ 9 - Show all classes
+ 0 - Exit Class Maintenance
+ Here is all of the class info
+ ClassID    Class Name    Credits    Weight    Grade
+ *******    **********    *******    ******    *****
+ 1    Algebra        1    AP    B+
+ 2    Physics        1    Normal    A-
+ 3    Gym        1    DualCredit    C+
+ 
+ 
+ ****************
+ ** Class Menu **
+ ****************
+ 1 - Add a class
+ 2 - Remove a class
+ 9 - Show all classes
+ 0 - Exit Class Maintenance
+ Here is the list of classes. Please enter the ClassID of the class to be removed.
+ Here is all of the class info
+ ClassID    Class Name    Credits    Weight    Grade
+ *******    **********    *******    ******    *****
+ 1    Algebra        1    AP    B+
+ 2    Physics        1    Normal    A-
+ 3    Gym        1    DualCredit    C+
+ you have selected this class:
+ 2    Physics        1    Normal    A-
+ Please enter a Y to confirm
+ Class has been removed
+ 
+ 
+ ****************
+ ** Class Menu **
+ ****************
+ 1 - Add a class
+ 2 - Remove a class
+ 9 - Show all classes
+ 0 - Exit Class Maintenance
+ Here is all of the class info
+ ClassID    Class Name    Credits    Weight    Grade
+ *******    **********    *******    ******    *****
+ 1    Algebra        1    AP    B+
+ 2    Gym        1    DualCredit    C+
+ 
+ 
+ ****************
+ ** Class Menu **
+ ****************
+ 1 - Add a class
+ 2 - Remove a class
+ 9 - Show all classes
+ 0 - Exit Class Maintenance
+ 
+ 
+ **********
+ ** Menu **
+ **********
+ 1 - Set the number of credits taken
+ 2 - Set current GPA
+ 3 - Current Class Maintenance
+ 9 - Show all entries
+ 0 - Exit Application
+ 
+ 
+ Here are all of the values
+ 0: Number of credits earned in the past.
+ 0: current GPA.
+ Here is all of the class info
+ ClassID    Class Name    Credits    Weight    Grade
+ *******    **********    *******    ******    *****
+ 1    Algebra        1    AP    B+
+ 2    Gym        1    DualCredit    C+
+ 
+ 
+ **********
+ ** Menu **
+ **********
+ 1 - Set the number of credits taken
+ 2 - Set current GPA
+ 3 - Current Class Maintenance
+ 9 - Show all entries
+ 0 - Exit Application
+*/
