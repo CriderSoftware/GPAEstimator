@@ -52,6 +52,20 @@ string GetInputString()
     return retVal;
 }
 
+float GetInputFloat()
+{
+    float retVal;
+    if (readFromFile)
+    {
+        //Do things to read from a file
+    }
+    else
+    {
+        cin >> retVal;
+    }
+    return retVal;
+}
+
 void showClassMaintenanceMenu()
 {
     //This function displays user choices for Class Maintenance
@@ -89,7 +103,7 @@ void getNumberOfCredits()
     //inputs: none
     //returns: nothing
     std::cout << "\n\nPlease enter the number of credits you have completed.\n";
-    std::cin >> numberPastCredits;
+    numberPastCredits = GetInputFloat();
 }
 
 void displayClassInfo()
@@ -121,7 +135,7 @@ void getGPA()
     //inputs: none
     //returns: nothing
     std::cout << "\n\nPlease enter current GPA.\n";
-    std::cin >> pastGPA;
+    pastGPA = GetInputFloat();
 }
 
 void giveAddAClassInstructions()
@@ -135,28 +149,28 @@ void getName(int whichClass)
 {
     //Get class name from user and store it in array
     std::cout << "\n\nStep 1 of 4 \nEnter the name of the class.\n";
-    std::cin >> classNames[whichClass];
+    classNames[whichClass] = GetInputString();
 }
 
 void getClassWeight(int whichClass)
 {
     //Store the Weight of the class: Normal, Enriched, AP, EarlyCollege, Dual Enrollment
     std::cout << "\n\nStep 2 of 4 \nEnter the weight type of the class (Normal, AP, EarlyCollege, DualCredit.\n";
-    std::cin >> classWeight[whichClass];
+    classWeight[whichClass] = GetInputString();
 }
 
 void getCredits(int whichClass)
 {
     //Get the number of credits that a class is worth from the user
     std::cout << "\n\nStep 3 of 4 \nEnter the number of credits this class is worth.\n";
-    std::cin >> classCredits[whichClass];
+    classCredits[whichClass] = GetInputFloat();
 }
 
 void getGradeEarned(int whichClass)
 {
     //Get letter grade earned for class
     std::cout << "\n\nStep 4 of 4 \nEnter the letter grade for this class\n";
-    std::cin >> gradesEarned[whichClass];
+    gradesEarned[whichClass] = GetInputString();
 }
 
 float letterGradeToNumber(string letterGrade)
@@ -292,7 +306,7 @@ void executeClassMaintenance()
     while (userChoice != 0)
     {
         showClassMaintenanceMenu();
-        std::cin >> userChoice;
+        userChoice = GetInputInt();
         completeClassMaintenance(userChoice);
     }
     
@@ -348,7 +362,7 @@ void executeUntilUserFinishes()
     while (userChoice != 0)
     {
         showMainMenu();
-        std::cin >> userChoice;
+        userChoice = GetInputInt();
         completeUserSelection(userChoice);
     }
     
