@@ -7,16 +7,50 @@
 //
 
 #include <iostream>
+using namespace std;
+
 
 float numberPastCredits = 0;
 float pastGPA = 0;
 
 int numberOfClasses = 0;
 
-std::string classNames[100];
-float classCredits[100];
-std::string gradesEarned[100];
-float gradePointValues[100];
+const int maxClasses = 100;
+std::string classNames[maxClasses];
+float classCredits[maxClasses];
+std::string gradesEarned[maxClasses];
+std::string classWeight[maxClasses];
+float gradePointValues[maxClasses];
+
+const bool readFromFile = false;
+
+int GetInputInt()
+{
+    int retVal;
+    if (readFromFile)
+    {
+        //Do things to read from a file
+    }
+    else
+    {
+        cin >> retVal;
+    }
+    return retVal;
+}
+
+string GetInputString()
+{
+    string retVal;
+    if (readFromFile)
+    {
+        //Do things to read from a file
+    }
+    else
+    {
+        cin >> retVal;
+    }
+    return retVal;
+}
 
 void showClassMaintenanceMenu()
 {
@@ -31,7 +65,7 @@ void showClassMaintenanceMenu()
     std::cout << "2 - Remove a class \n";
     std::cout << "9 - Show all classes \n";
     std::cout << "0 - Exit Class Maintenance \n";
-
+    
 }
 
 void showMainMenu()
@@ -58,11 +92,27 @@ void getNumberOfCredits()
     std::cin >> numberPastCredits;
 }
 
+void displayClassInfo()
+{
+    for (int i = 0; i< numberOfClasses;i++)
+    {
+        if (i==0)
+        {
+            cout<< "Here is all of the class info\n";
+            cout<< "Class Name\tCredits\tWeight\tGrade\n";
+            cout<< "**********\t*******\t******\t*****\n";
+        }
+        cout << classNames[i] << "\t" << classCredits[i] << "\t" << classWeight[i]<<"\t" << gradesEarned[i] << "\n";
+    }
+}
+
 void showAllValues()
 {
     std::cout << "\n\nHere are all of the values\n";
     std::cout << numberPastCredits << ": Number of credits earned in the past.\n";
     std::cout << pastGPA << ": current GPA.\n";
+    
+    displayClassInfo();
 }
 
 void getGPA()
@@ -72,6 +122,125 @@ void getGPA()
     //returns: nothing
     std::cout << "\n\nPlease enter current GPA.\n";
     std::cin >> pastGPA;
+}
+
+void giveAddAClassInstructions()
+{
+    //Provide instructions to users so they know
+    //how much data will be asked when entering a class.
+    std::cout << "\nYou will be prompted for the name, class weight, credits, and estimated grade for class\n\n";
+}
+
+void getName(int whichClass)
+{
+    //Get class name from user and store it in array
+    std::cout << "\n\nStep 1 of 4 \nEnter the name of the class.\n";
+    std::cin >> classNames[whichClass];
+}
+
+void getClassWeight(int whichClass)
+{
+    //Store the Weight of the class: Normal, Enriched, AP, EarlyCollege, Dual Enrollment
+    std::cout << "\n\nStep 2 of 4 \nEnter the weight type of the class (Normal, AP, EarlyCollege, DualCredit.\n";
+    std::cin >> classWeight[whichClass];
+}
+
+void getCredits(int whichClass)
+{
+    //Get the number of credits that a class is worth from the user
+    std::cout << "\n\nStep 3 of 4 \nEnter the number of credits this class is worth.\n";
+    std::cin >> classCredits[whichClass];
+}
+
+void getGradeEarned(int whichClass)
+{
+    //Get letter grade earned for class
+    std::cout << "\n\nStep 4 of 4 \nEnter the letter grade for this class\n";
+    std::cin >> gradesEarned[whichClass];
+}
+
+float letterGradeToNumber(string letterGrade)
+{
+    //Turn a letter grade into a number for computing a GPA
+    //inputs: letterGrade - string holding a grade value (ie A, A-, B+, B, B-...)
+    //returns: GPA translated number
+    float returnNumber = -100;
+    
+    char letterOnly = toupper(letterGrade[0]);
+   switch (letterOnly) {
+        case 'A':
+            returnNumber = 4.0;
+            break;
+        case 'B':
+            returnNumber = 3.0;
+            break;
+        case 'C':
+            returnNumber = 2.0;
+            break;
+        case 'D':
+            returnNumber = 1.0;
+            break;
+        case 'F':
+            returnNumber = 0.0;
+            break;
+
+        default:
+            break;
+    }
+    if (letterGrade.length() == 2)
+    {
+        if (letterGrade[1] == '-')
+        {
+            returnNumber -= 0.25;
+        }
+        if (letterGrade[1] == '+')
+        {
+            returnNumber += 0.25;
+        }
+    }
+    return returnNumber;
+}
+
+float weightToNumber(string weightName)
+{
+    //Turn a description of a weighting (ie Normal, AP, Early College, ...) into
+    //a weight that can be used to modify a GPA
+    //input: index into the classWeight array
+    //output: weight converted into a floating point number ready to modify the course GPA amount
+    
+    float returnWeight = -1000;
+    
+    if (weightName == "Normal")
+    {
+        returnWeight = 0;
+    } else if (weightName == "AP" || weightName == "EarlyCollege" || weightName == "DualCredit")
+    {
+        returnWeight = 1;
+    } else if (weightName == "Enriched")
+    {
+        returnWeight = 0.5;
+    }
+    return returnWeight;
+}
+
+void storeGradePoint(int whichClass)
+{
+    float unweightedGrade = letterGradeToNumber(gradesEarned[whichClass]);
+    float weightingToUse = weightToNumber(classWeight[whichClass]);
+    
+    gradePointValues[whichClass] = unweightedGrade + weightingToUse;
+
+}
+
+void addAClass()
+{
+    giveAddAClassInstructions();
+    getName(numberOfClasses);
+    getClassWeight(numberOfClasses);
+    getCredits(numberOfClasses);
+    getGradeEarned(numberOfClasses);
+    storeGradePoint(numberOfClasses);
+    numberOfClasses++;
 }
 
 void completeClassMaintenance(int userChoice)
@@ -95,7 +264,7 @@ void completeClassMaintenance(int userChoice)
     
     switch (userChoice) {
         case 1:
-            //addAClass();
+            addAClass();
             break;
             
         case 2:
@@ -154,7 +323,7 @@ void completeUserSelection(int userChoice)
         case 2:
             getGPA();
             break;
-        
+            
         case 3:
             executeClassMaintenance();
             break;
@@ -169,7 +338,7 @@ void completeUserSelection(int userChoice)
     
 }
 
-void executeUntilUserFinishes() 
+void executeUntilUserFinishes()
 {
     //Loops until the user enteres a zero
     //inputs: none
@@ -194,5 +363,6 @@ int main() {
     
     return 0;
 }
+
 
 
