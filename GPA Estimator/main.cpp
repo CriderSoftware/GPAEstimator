@@ -94,6 +94,7 @@ void showMainMenu()
     cout << "2 - Set current GPA \n";
     cout << "3 - Current Class Maintenance \n";
     cout << "4 - Estimate GPA (include current classes)\n";
+    cout << "5 - Estimate GPA (assume grades earned)\n";
     cout << "9 - Show all entries \n";
     cout << "0 - Exit Application \n";
 }
@@ -251,13 +252,17 @@ float weightToNumber(string weightName)
     return returnWeight;
 }
 
+float computeGradePointToUse(string letterGrade, string weightDescription)
+{
+    float unweightedGrade = letterGradeToNumber(letterGrade);
+    float weightingToUse = weightToNumber(weightDescription);
+    
+    return unweightedGrade + weightingToUse;
+}
+
 void storeGradePoint(int whichClass)
 {
-    float unweightedGrade = letterGradeToNumber(gradesEarned[whichClass]);
-    float weightingToUse = weightToNumber(classWeight[whichClass]);
-    
-    gradePointValues[whichClass] = unweightedGrade + weightingToUse;
-
+    gradePointValues[whichClass] = computeGradePointToUse(gradesEarned[whichClass], classWeight[whichClass]);
 }
 
 void addAClass()
@@ -373,6 +378,45 @@ void executeClassMaintenance()
     
 }
 
+
+float calcGPA(int gradesToUseFlag)
+{
+    //Calculate the GPA. use eithe the entered grades for classes
+    //or predefined values.
+    //inputL gradesToUseFlag - 0 means use the entered values
+    //                          1 means to use all As for classes
+    //                          2 means to use all Bs for classes
+    //                          3 means to use all Cs for classes
+    float newGPANumerator = numberPastCredits * pastGPA;
+    float newCredits = numberPastCredits;
+    for (int i=0;i<numberOfClasses;i++)
+    {
+        string letterGrade="";
+        switch (gradesToUseFlag) {
+            case 0:
+                letterGrade = gradesEarned[i];
+                break;
+            case 1:
+                letterGrade = "A";
+                break;
+            case 2:
+                letterGrade = "B";
+                break;
+            case 3:
+                letterGrade = "C";
+                break;
+                
+            default:
+                break;
+        }
+        float gpVal = computeGradePointToUse(letterGrade, classWeight[i]);
+        newGPANumerator += gpVal * classCredits[i];
+        newCredits += classCredits[i];
+    }
+    float retVal = newGPANumerator / newCredits;
+    return retVal;
+}
+
 void estimateGPA()
 {
     float newGPANumerator = numberPastCredits * pastGPA;
@@ -382,9 +426,26 @@ void estimateGPA()
         newGPANumerator += gradePointValues[i] * classCredits[i];
         newCredits += classCredits[i];
     }
-    float retVal = newGPANumerator / newCredits;
+    float retVal = calcGPA(0);
     cout << "Estimated GPA based on current classes is: " << retVal;
 }
+
+void estimateGPAWithAssumptions()
+{
+    //Estimate GPA for user using the following scenarios:
+    //All As, All Bs, All Cs
+    //input: nothing
+    //returns:nothing
+    cout << "Current GPA is " << pastGPA << endl;
+    cout << "Estimated GPA based on current classes: " << calcGPA(0) << endl;
+    cout << "Estimated GPA if you get all As: " << calcGPA(1) << endl;
+    cout << "Estimated GPA if you get all Bs: " << calcGPA(2) << endl;
+    cout << "Estimated GPA if you get all Cs: " << calcGPA(3) << endl;
+
+    
+    
+}
+
 void completeUserSelection(int userChoice)
 {
     //Based on the users choice, this routine calls others to
@@ -417,7 +478,9 @@ void completeUserSelection(int userChoice)
         case 4:
             estimateGPA();
             break;
-            
+        case 5:
+            estimateGPAWithAssumptions();
+            break;
         case 9:
             showAllValues();
             break;
