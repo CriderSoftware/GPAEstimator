@@ -116,7 +116,7 @@ void displayClassInfo()
             cout<< "Class Name\tCredits\tWeight\tGrade\n";
             cout<< "**********\t*******\t******\t*****\n";
         }
-        cout << classNames[i] << "\t" << classCredits[i] << "\t" << classWeight[i]<<"\t" << gradesEarned[i] << "\n";
+        cout << classNames[i] << "\t\t" << classCredits[i] << "\t" << classWeight[i]<<"\t" << gradesEarned[i] << "\n";
     }
 }
 
@@ -286,7 +286,7 @@ void completeClassMaintenance(int userChoice)
             break;
             
         case 9:
-            //showAllClasses();
+            displayClassInfo();
             break;
             
         default:
