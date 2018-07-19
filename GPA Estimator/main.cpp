@@ -87,14 +87,15 @@ void showMainMenu()
     //This function displays user choices on the stdout
     //inputs: none
     //returns: nothing
-    std::cout << "\n\n**********\n";
-    std::cout << "** Menu **\n";
-    std::cout << "**********\n";
-    std::cout << "1 - Set the number of credits taken \n";
-    std::cout << "2 - Set current GPA \n";
-    std::cout << "3 - Current Class Maintenance \n";
-    std::cout << "9 - Show all entries \n";
-    std::cout << "0 - Exit Application \n";
+    cout << "\n\n**********\n";
+    cout << "** Menu **\n";
+    cout << "**********\n";
+    cout << "1 - Set the number of credits taken \n";
+    cout << "2 - Set current GPA \n";
+    cout << "3 - Current Class Maintenance \n";
+    cout << "4 - Estimate GPA (include current classes)\n";
+    cout << "9 - Show all entries \n";
+    cout << "0 - Exit Application \n";
 }
 
 void getNumberOfCredits()
@@ -108,8 +109,11 @@ void getNumberOfCredits()
 
 void displayOneClass(int whichClass)
 {
-    cout << whichClass + 1 << "\t" << classNames[whichClass] << "\t\t" << classCredits[whichClass] << "\t" << classWeight[whichClass]<<"\t" << gradesEarned[whichClass] << "\n";
+    cout << whichClass + 1 << "\t" << classNames[whichClass] << "\t\t" <<
+    classCredits[whichClass] << "\t" << classWeight[whichClass]<<"\t" <<
+    gradesEarned[whichClass] << gradePointValues[whichClass] << "\n";
 }
+
 void displayClassInfoHeader()
 {
     //Display the headers for the list of classes entered
@@ -369,6 +373,18 @@ void executeClassMaintenance()
     
 }
 
+void estimateGPA()
+{
+    float newGPANumerator = numberPastCredits * pastGPA;
+    float newCredits = numberPastCredits;
+    for (int i=0;i<numberOfClasses;i++)
+    {
+        newGPANumerator += gradePointValues[i] * classCredits[i];
+        newCredits += classCredits[i];
+    }
+    float retVal = newGPANumerator / newCredits;
+    cout << "Estimated GPA based on current classes is: " << retVal;
+}
 void completeUserSelection(int userChoice)
 {
     //Based on the users choice, this routine calls others to
@@ -397,6 +413,9 @@ void completeUserSelection(int userChoice)
             
         case 3:
             executeClassMaintenance();
+            break;
+        case 4:
+            estimateGPA();
             break;
             
         case 9:
